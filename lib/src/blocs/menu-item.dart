@@ -18,12 +18,19 @@ class MenuItem extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+          color: Theme.of(context).brightness == Brightness.dark
+              ? blackColor
+              : Colors.white,
+          borderRadius: BorderRadius.circular(10)),
       child: ListTile(
         leading: icon,
         title: Text(text,
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: blackColor)),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : blackColor)),
         subtitle: subtitle.isNotEmpty
             ? Text(
                 subtitle,

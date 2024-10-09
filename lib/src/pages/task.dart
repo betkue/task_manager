@@ -13,9 +13,9 @@ class Task extends StatefulWidget {
 }
 
 class _TaskState extends State<Task> {
-  int stateTask = 0; //etat d'avensement des taches
+  int? stateTask = 0; //etat d'avensement des taches
   String? selectedPriority; // priorite
-  void change(int a) {
+  void change(int? a) {
     setState(() {
       stateTask = a;
     });
@@ -88,13 +88,13 @@ class _TaskState extends State<Task> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     change(null);
-                  //   },
-                  //   child: title("All", width, height,
-                  //       widget.servs.data.etatCommande == null),
-                  // ),
+                  GestureDetector(
+                    onTap: () {
+                      change(null);
+                    },
+                    child: title("All", width, height,
+                        stateTask == null,context),
+                  ),
                   GestureDetector(
                     onTap: () {
                       change(0);
@@ -118,10 +118,9 @@ class _TaskState extends State<Task> {
                 ],
               ),
             ),
+            SizedBox(height: 5,),
             Expanded(
-                child: SingleChildScrollView(
-              child: TaskLister(priority: selectedPriority, state: stateTask),
-            ))
+                child: TaskLister(priority: selectedPriority, state: stateTask))
           ],
         ),
       ),
