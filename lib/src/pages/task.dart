@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:task_manager/src/blocs/online_mode.dart';
 import 'package:task_manager/src/styles/styles.dart';
-import 'package:task_manager/src/utils/data.dart';
+import 'package:task_manager/src/utils/sercive_provider.dart';
 
 class Task extends StatefulWidget {
   const Task({super.key});
@@ -11,7 +12,7 @@ class Task extends StatefulWidget {
 }
 
 class _TaskState extends State<Task> {
-  int stateTask = 0;//etat d'avensement des taches
+  int stateTask = 0; //etat d'avensement des taches
   String? selectedPriority; // priorite
   void change(int a) {
     setState(() {
@@ -21,9 +22,19 @@ class _TaskState extends State<Task> {
 
   @override
   Widget build(BuildContext context) {
+    final serviceProvider = Provider.of<ServiceProvider>(context); // provider
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        elevation: 4,
+        backgroundColor: orangeColor,
+        child: Icon(
+          Icons.add,
+          color: grayColor,
+        ),
+      ),
       appBar: AppBar(
         leading: Image.asset(
           'assets/images/logo.png',
@@ -115,7 +126,6 @@ class _TaskState extends State<Task> {
     );
   }
 }
-
 
 //mise en forme des selecteurs d'etat
 Widget title(String title, double width, double height, bool isActive) {

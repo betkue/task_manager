@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:task_manager/src/pages/home.dart';
 import 'package:task_manager/src/pages/loadingpage.dart';
-
+import 'package:task_manager/src/utils/sercive_provider.dart';
+import 'package:provider/provider.dart';
 void main() async {
   //fixer l'orientation de l'app
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  runApp(const MyApp());
+ runApp(
+    ChangeNotifierProvider(
+      create: (context) => ServiceProvider(),
+      child: MyApp(),
+    ),
+  );;
 }
 
 class MyApp extends StatelessWidget {
@@ -27,11 +33,17 @@ class MyApp extends StatelessWidget {
             FocusManager.instance.primaryFocus?.unfocus();
           }
         },
-        child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Task Master',
-            theme: ThemeData(),
-            home:  Home() // LoadingPage()
-            ));
+        child: Consumer<ServiceProvider>(
+      builder: (context, serviceProvider, child) {
+        return MaterialApp(
+          title: 'Task Master',
+          debugShowCheckedModeBanner: false,
+          theme: lightTheme,  // Thème clair personnalisé
+          darkTheme: darkTheme,  // Thème sombre personnalisé
+          themeMode: serviceProvider.themeMode, // Mode de thème
+          home: Home(),
+        );
+      },
+    ));
   }
 }

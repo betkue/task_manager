@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:task_manager/src/functions/base_functions.dart';
 import 'package:task_manager/src/pages/settings.dart';
 import 'package:task_manager/src/pages/task.dart';
 import 'package:task_manager/src/styles/styles.dart';
@@ -43,6 +44,11 @@ class _HomeState extends State<Home> {
         curve: Curves.ease,
       );
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override

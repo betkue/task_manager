@@ -1,56 +1,52 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_manager/src/utils/constant.dart';
-import 'package:task_manager/src/utils/data.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:io';
 
+import 'package:task_manager/src/utils/sercive_provider.dart';
 
 //test de connectivite
-getDetailsOfDevice() async {
+getDetailsOfDevice(context) async {
   var connectivityResult = await (Connectivity().checkConnectivity());
+  final serviceProvider = Provider.of<ServiceProvider>(context); // provider
   if (connectivityResult == ConnectivityResult.none) {
-    internet = false;
+    serviceProvider.toggleInternet(false);
   } else {
-    internet = true;
-  }
-  try {
-    pref = await SharedPreferences.getInstance();
-  } catch (e) {
-    if (e is SocketException) {
-      internet = false;
-    }
+    serviceProvider.toggleInternet(true);
   }
 }
 
-getLocalData() async {
+getLocalData(context) async {
   //si l'application contient un token on recherche le user
-  if (pref.containsKey('token')) {
-    token = pref.getString('token');
-    var response = await getUserDetails();
+  final serviceProvider = Provider.of<ServiceProvider>(context); // provider
+
+  if (serviceProvider.pref.containsKey('token')) {
+    serviceProvider.toggleToken(serviceProvider.pref.getString('token') ?? "");
+    var response = await getUserDetails(context);
     return response;
   } else {
     return false;
   }
 }
 
-getUserDetails() async {
+getUserDetails(context) async {
   dynamic result;
+  final serviceProvider = Provider.of<ServiceProvider>(context); // provider
 
   try {
-    if (internet) {
+    if (serviceProvider.internet) {
       //recuperation du user depuis le serveur
-
- 
     } else {
       //recuperation du user en local
-      userDetails = {'userName': "BTJH"};
+  serviceProvider.toggleUser({});
       result = true;
     }
   } catch (e) {
     if (e is SocketException) {
-      internet = false;
+      serviceProvider.toggleInternet(false);
       result = false;
     }
   }

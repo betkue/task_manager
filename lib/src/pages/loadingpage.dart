@@ -24,9 +24,9 @@ class _LoadingPageState extends State<LoadingPage> {
 
   initialisation() async {
     //on verifi si l'appareil est connecte a internet
-    await getDetailsOfDevice();
+    await getDetailsOfDevice(context);
     //on charge les data
-    var result = await getLocalData();
+    var result = await getLocalData(context);
 
     //si l'utilisateur est connecte on ouvre la page d'acceuil
     if (result) {

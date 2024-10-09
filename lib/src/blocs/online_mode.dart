@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:task_manager/src/styles/styles.dart';
-import 'package:task_manager/src/utils/data.dart';
+import 'package:task_manager/src/utils/sercive_provider.dart';
 
 // presentation du mode d'enregistrement
 class OnlineMode extends StatefulWidget {
@@ -11,18 +12,18 @@ class OnlineMode extends StatefulWidget {
 }
 
 class _OnlineModeState extends State<OnlineMode> {
-  bool mode = internet;
-
   @override
   Widget build(BuildContext context) {
+    final serviceProvider = Provider.of<ServiceProvider>(context); // provider
+
     return Row(
       children: [
-        Text(mode ? "On line" : "Off line"),
+        Text(serviceProvider.internet ? "On line" : "Off line"),
         Transform.scale(
           scale: 0.7,
           child: Switch(
               activeColor: greenColor,
-              value: mode,
+              value: serviceProvider.internet,
               onChanged: (e) {
                 setState(() {
                   // mode = !mode;
