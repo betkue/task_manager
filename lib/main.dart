@@ -38,8 +38,8 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Task Master',
           debugShowCheckedModeBanner: false,
-          theme: lightTheme,  // Thème clair personnalisé
-          darkTheme: darkTheme,  // Thème sombre personnalisé
+          theme: ThemeData.light(), // Thème clair
+          darkTheme: ThemeData.dark(), // Thème sombre
           themeMode: serviceProvider.themeMode, // Mode de thème
           home: Home(),
         );

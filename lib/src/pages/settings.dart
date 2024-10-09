@@ -26,12 +26,13 @@ class _SettingState extends State<Setting> {
       appBar: AppBar(
         leading: Image.asset(
           'assets/images/logo.png',
-          height: 20,
         ),
         title: Text("Setting"),
         actions: const [OnlineMode()],
       ),
-      backgroundColor: backgroundPage,
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? DarkColors.background
+          : LightColors.background,
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 40),
         child: Center(

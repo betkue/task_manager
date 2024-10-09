@@ -22,7 +22,8 @@ class MenuItem extends StatelessWidget {
       child: ListTile(
         leading: icon,
         title: Text(text,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: blackColor)),
         subtitle: subtitle.isNotEmpty
             ? Text(
                 subtitle,

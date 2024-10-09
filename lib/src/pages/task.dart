@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/src/blocs/online_mode.dart';
+import 'package:task_manager/src/blocs/task_lister.dart';
 import 'package:task_manager/src/styles/styles.dart';
 import 'package:task_manager/src/utils/sercive_provider.dart';
 
@@ -38,12 +39,13 @@ class _TaskState extends State<Task> {
       appBar: AppBar(
         leading: Image.asset(
           'assets/images/logo.png',
-          height: 20,
         ),
         title: const Text("Tasks List"),
         actions: const [OnlineMode()],
       ),
-      backgroundColor: backgroundPage,
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? DarkColors.background
+          : LightColors.background,
       body: Center(
         child: Column(
           children: [
@@ -97,28 +99,28 @@ class _TaskState extends State<Task> {
                     onTap: () {
                       change(0);
                     },
-                    child: title("In pending", width, height, stateTask == 0),
+                    child: title(
+                        "In pending", width, height, stateTask == 0, context),
                   ),
                   GestureDetector(
                     onTap: () {
                       change(1);
                     },
-                    child: title("In Process", width, height, stateTask == 1),
+                    child: title(
+                        "In Process", width, height, stateTask == 1, context),
                   ),
                   GestureDetector(
                     onTap: () {
                       change(2);
                     },
-                    child: title("End", width, height, stateTask == 2),
+                    child: title("End", width, height, stateTask == 2, context),
                   ),
                 ],
               ),
             ),
-            const Expanded(
+            Expanded(
                 child: SingleChildScrollView(
-              child: Column(
-                children: [],
-              ),
+              child: TaskLister(priority: selectedPriority, state: stateTask),
             ))
           ],
         ),
@@ -128,13 +130,16 @@ class _TaskState extends State<Task> {
 }
 
 //mise en forme des selecteurs d'etat
-Widget title(String title, double width, double height, bool isActive) {
+Widget title(
+    String title, double width, double height, bool isActive, context) {
   return Container(
     margin: EdgeInsets.only(right: 10),
     child: Material(
       borderRadius: BorderRadius.circular(5),
       clipBehavior: Clip.hardEdge,
-      color: backgroundPage,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? DarkColors.background
+          : LightColors.background,
       child: InkWell(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),

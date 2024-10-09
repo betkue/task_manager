@@ -58,12 +58,26 @@ class _HomeState extends State<Home> {
           key: _bottomNavigationKey,
           index: 0,
           items: const <Widget>[
-            Icon(Icons.list, size: 30),
-            Icon(Icons.settings, size: 30),
+            Icon(
+              Icons.list,
+              size: 30,
+              color: gray2Color,
+            ),
+            Icon(
+              Icons.settings,
+              size: 30,
+              color: gray2Color,
+            ),
           ],
-          color: Colors.white,
-          buttonBackgroundColor: Colors.white,
-          backgroundColor: backgroundPage,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? blackColor
+              : Colors.white,
+          buttonBackgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? DarkColors.background
+              : LightColors.background,
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? const Color.fromARGB(255, 57, 51, 51)
+              : LightColors.background,
           animationCurve: Curves.easeInOut,
           animationDuration: const Duration(milliseconds: 600),
           onTap: (index) {
