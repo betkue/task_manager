@@ -10,13 +10,18 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _page = 0;
+  int _page = 0; //index page initial
+
+//cle de navigation
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
+//controleur boutton navigation
   PageController pageController = PageController(
     initialPage: 0,
     keepPage: true,
   );
+
+  //changement de page
   void pageChanged(
     int index,
   ) {
@@ -25,6 +30,7 @@ class _HomeState extends State<Home> {
     });
   }
 
+//a la selection de l'icone
   void bottomTapped(
     int index,
   ) {
@@ -47,9 +53,6 @@ class _HomeState extends State<Home> {
           index: 0,
           items: const <Widget>[
             Icon(Icons.list, size: 30),
-            // Icon(Icons.settings, size: 30),
-            // Icon(Icons.settings, size: 30),
-            // Icon(Icons.settings, size: 30),
             Icon(Icons.settings, size: 30),
           ],
           color: Colors.white,

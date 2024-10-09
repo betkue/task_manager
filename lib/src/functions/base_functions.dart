@@ -6,6 +6,8 @@ import 'package:task_manager/src/utils/data.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:io';
 
+
+//test de connectivite
 getDetailsOfDevice() async {
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
