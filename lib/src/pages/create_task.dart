@@ -36,8 +36,10 @@ class _CreateTaskState extends State<CreateTask> {
       title = widget.task!['title'];
       description = widget.task!['description'];
       priority = widget.task!['priority']; // Par défaut à 'l' pour faible
-      expectedBegin = widget.task!['expectedBegin']; // date pour commencer
-      expectedEnd = widget.task!['expectedEnd']; // date pour finir
+      expectedBegin =
+          DateTime.parse(widget.task!['expectedBegin']); // date pour commencer
+      expectedEnd =
+          DateTime.parse(widget.task!['expectedEnd']); // date pour finir
       state = widget.task![
           'state']; // 0 pour non commencée, 1 pour en cours, 2 pour terminée
     }
@@ -76,9 +78,11 @@ class _CreateTaskState extends State<CreateTask> {
               ),
               TextInput(
                   onsave: (value) {
-                    title = value ?? '';
+                    setState(() {
+                      title =value ?? '';
+                    });
                   },
-                  text: widget.task != null ? title : null,
+                  text: title,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter a title.';
@@ -206,9 +210,11 @@ class _CreateTaskState extends State<CreateTask> {
               TextInput(
                   maxLines: 5,
                   onsave: (value) {
-                    description = value ?? '';
+                    setState(() {
+                      description = value ?? '';
+                    });
                   },
-                  text: widget.task != null ? description : null,
+                  text: description,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter a description.';
@@ -217,7 +223,7 @@ class _CreateTaskState extends State<CreateTask> {
                   },
                   label: 'Description'),
 
-              (title.isEmpty && expectedBegin == null && expectedEnd == null)
+              (title.isEmpty || expectedBegin == null || expectedEnd == null)
                   ? Container()
                   : InkWell(
                       onTap: () {
@@ -231,10 +237,10 @@ class _CreateTaskState extends State<CreateTask> {
                               'title': title,
                               'description': description,
                               'priority': priority,
-                              'expectedBegin':
-                                  expectedBegin, // Heure supposée de début
-                              'expectedEnd':
-                                  expectedEnd, // Heure supposée de fin
+                              'expectedBegin': expectedBegin
+                                  .toString(), // Heure supposée de début
+                              'expectedEnd': expectedEnd
+                                  .toString(), // Heure supposée de fin
                               'actualBegin': null, // Heure réelle de début
                               'actualEnd': null, // Heure réelle de fin
                               'state': state, // État de la tâche

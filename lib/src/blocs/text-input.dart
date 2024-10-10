@@ -29,7 +29,7 @@ class _TextInputState extends State<TextInput> {
         cursorColor: blackColor,
         maxLines: widget.maxLines,
         keyboardType: TextInputType.text,
-        controller: TextEditingController(text: widget.text),
+        initialValue:widget.text,
         style: TextStyle(
           color: blackColor,
           fontSize: height / 55,
@@ -52,6 +52,9 @@ class _TextInputState extends State<TextInput> {
         validator: (String? value) {
           widget.validator(value);
         },
+       onChanged: (String? value) {
+          widget.onsave!(value);
+        }
       ),
     );
   }

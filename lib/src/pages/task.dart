@@ -65,14 +65,14 @@ class _TaskState extends State<Task> {
                     ), // Icône de filtre
                     onSelected: (String value) {
                       setState(() {
-                        selectedPriority = value;
+                        selectedPriority = value == 'n' ? null : value;
                       });
                     },
                     //liste de priorite
                     itemBuilder: (BuildContext context) =>
                         <PopupMenuEntry<String>>[
                       const PopupMenuItem<String>(
-                        value: null,
+                        value: 'n',
                         child: Text('All'),
                       ),
                       const PopupMenuItem<String>(

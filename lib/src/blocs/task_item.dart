@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:task_manager/src/pages/create_task.dart';
 import 'package:task_manager/src/styles/styles.dart';
+import 'package:task_manager/src/utils/sercive_provider.dart';
 
 class TaskItem extends StatefulWidget {
   final Map<String, dynamic> task;
@@ -14,109 +16,135 @@ class TaskItem extends StatefulWidget {
 class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CreateTask(
-                      index: widget.index,
-                      task: widget.task,
-                    )));
+    final serviceProvider = Provider.of<ServiceProvider>(context); // provider
+
+    return Dismissible(
+      direction:
+          DismissDirection.startToEnd, // Glisser uniquement vers la gauche
+      background: Container(
+        color: redColor, // Couleur de fond pendant le swipe
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: const Icon(
+          Icons.delete,
+          color: Colors.white,
+        ),
+      ),
+      onDismissed: (direction) {
+        // Appeler une fonction pour supprimer la tâche
+        serviceProvider.toggleDeleteTasks(widget.index);
       },
-      child: Container(
-        margin: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? blackColor
-                : Colors.white,
-            borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10))),
-        child: Column(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: getColorPriority(widget.task['priority']),
-                // Theme.of(context).brightness == Brightness.dark
-                //     ? gray2Color
-                //     : const Color.fromARGB(255, 78, 77, 77),
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Start at : ${widget.task['expectedBegin']!.day}-${widget.task['expectedBegin']!.month}-${widget.task['expectedBegin']!.year} ${widget.task['expectedBegin']!.hour}:${widget.task['expectedBegin']!.minute.toString().padLeft(2, '0')}',
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+      key: Key(widget.index.toString() +
+          widget.task['title'] +
+          DateTime.now().toString()),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateTask(
+                        index: widget.index,
+                        task: widget.task,
+                      )));
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+          decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? blackColor
+                  : Colors.white,
+              borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10))),
+          child: Material(
+            elevation: 2,
+            child: Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: getColorPriority(widget.task['priority']),
+                    // Theme.of(context).brightness == Brightness.dark
+                    //     ? gray2Color
+                    //     : const Color.fromARGB(255, 78, 77, 77),
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10)),
                   ),
-                  widget.task['expectedEnd'] == null
-                      ? Container()
-                      : Text(
-                          'End at : ${widget.task['expectedEnd']!.day}-${widget.task['expectedEnd']!.month}-${widget.task['expectedEnd']!.year} ${widget.task['expectedEnd']!.hour}:${widget.task['expectedEnd']!.minute.toString().padLeft(2, '0')}',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Start at : ${widget.task['expectedBegin']!.day}-${widget.task['expectedBegin']!.month}-${widget.task['expectedBegin']!.year} ${widget.task['expectedBegin']!.hour}:${widget.task['expectedBegin']!.minute.toString().padLeft(2, '0')}',
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      widget.task['expectedEnd'] == null
+                          ? Container()
+                          : Text(
+                              'End at : ${widget.task['expectedEnd']!.day}-${widget.task['expectedEnd']!.month}-${widget.task['expectedEnd']!.year} ${widget.task['expectedEnd']!.hour}:${widget.task['expectedEnd']!.minute.toString().padLeft(2, '0')}',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            )
+                    ],
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.circle,
+                    color: getColorPriority(
+                        widget.task['priority']), //afficher la priorite
+                  ),
+                  title: Text(widget.task['title'], //titre
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : blackColor)),
+
+                  subtitle: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.task['description'], //description
+                        maxLines: 2,
+                        style: const TextStyle(
+                            color: gray2Color, fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        margin: const EdgeInsets.only(top: 9),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: getColorState(widget.task[
+                              'state']), //couleur du composant en fonction de la description
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Text(
+                          getTextState(widget.task['state']), // Texte de l'etat
+                          textAlign: TextAlign.center,
                           style: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
-                        )
-                ],
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.circle,
-                color: getColorPriority(
-                    widget.task['priority']), //afficher la priorite
-              ),
-              title: Text(widget.task['title'], //titre
-                  maxLines: 1,
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : blackColor)),
-
-              subtitle: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.task['description'], //description
-                    maxLines: 2,
-                    style: const TextStyle(
-                        color: gray2Color, fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2,
-                    margin: const EdgeInsets.only(top: 9),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: getColorState(widget.task[
-                          'state']), //couleur du composant en fonction de la description
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Text(
-                      getTextState(widget.task['state']), // Texte de l'etat
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  )
-                ],
-              ),
-              trailing: const Icon(
-                Icons.chevron_right,
-                color: gray2Color,
-                weight: 10,
-              ),
-              // onTap: () {},
+                  trailing: const Icon(
+                    Icons.chevron_right,
+                    color: gray2Color,
+                    weight: 10,
+                  ),
+                  // onTap: () {},
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

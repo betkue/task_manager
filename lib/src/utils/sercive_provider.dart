@@ -9,7 +9,7 @@ class ServiceProvider extends ChangeNotifier {
   bool internet = false;
   SharedPreferences? _pref;
   String token = '';
-  Map<String, dynamic> userDetails = {};
+  Map<String, dynamic> userDetails = {"userName": ''};
   ThemeMode _themeMode = ThemeMode.light;
   List<dynamic> tasks = []; // Liste des tâches
   Map<String, dynamic> task = {};
@@ -61,7 +61,6 @@ class ServiceProvider extends ChangeNotifier {
     notifyListeners();
 
     showToast("Task add");
-    log(tasks.toString());
   }
 
   void toggleDeleteTasks(int index) {
@@ -70,7 +69,6 @@ class ServiceProvider extends ChangeNotifier {
     notifyListeners();
 
     showToast("Task Delete");
-    log(tasks.toString());
   }
 
   void toggleUpdateTasks(Map<String, dynamic> value, int index) {
@@ -79,7 +77,6 @@ class ServiceProvider extends ChangeNotifier {
     notifyListeners();
 
     showToast("Task Delete");
-    log(tasks.toString());
   }
 
   // Charger le thème depuis SharedPreferences
@@ -95,31 +92,23 @@ class ServiceProvider extends ChangeNotifier {
 
   // Charger les tasks depuis SharedPreferences
   void _loadTaskFromPrefs() async {
-    var value;
+    var value = '[]';
     if (_pref!.containsKey('tasks')) {
-      value = _pref!.getString('tasks');
-    } else {
-      value = '[]';
-      _saveTaskToPrefs(jsonDecode(value));
+      value = _pref!.getString('tasks')!;
     }
     tasks = List<dynamic>.from(jsonDecode(value));
-    log(tasks.toString());
     notifyListeners();
   }
 
   // Charger les info du user depuis SharedPreferences
   void _loadUserFromPrefs() async {
-    var value;
+    var value = '{}';
     if (_pref!.containsKey('user')) {
-      value = _pref!.getString('user');
-    } else {
-      value = jsonEncode(userDetails);
-      _saveUsersToPrefs(jsonDecode(value));
+      value = _pref!.getString('user')!;
     }
 
     userDetails = Map<String, dynamic>.from(jsonDecode(value));
 
-    log(userDetails.toString());
     notifyListeners();
   }
 
@@ -131,6 +120,7 @@ class ServiceProvider extends ChangeNotifier {
   // Sauvegarder le thème dans SharedPreferences
   void _saveTaskToPrefs(List<dynamic> tasks) async {
     await _pref!.setString('tasks', jsonEncode(tasks));
+    _loadTaskFromPrefs();
   }
 
   // Sauvegarder le thème dans SharedPreferences

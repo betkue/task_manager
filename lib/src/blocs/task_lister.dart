@@ -22,10 +22,19 @@ class _TaskListerState extends State<TaskLister> {
     return ListView.builder(
       itemCount: serviceProvider.tasks.length,
       itemBuilder: (context, index) {
-        return TaskItem(
-          task: serviceProvider.tasks[index],
-          index:index
-        );
+        return ((widget.priority == null ||
+                    widget.priority ==
+                        serviceProvider.tasks[index]['priority']) &&
+                (widget.state == null ||
+                    widget.state == serviceProvider.tasks[index]['state']))
+            ? TaskItem(task: {
+                ...serviceProvider.tasks[index],
+                "expectedBegin": DateTime.parse(
+                    serviceProvider.tasks[index]['expectedBegin']),
+                "expectedEnd":
+                    DateTime.parse(serviceProvider.tasks[index]['expectedEnd']),
+              }, index: index)
+            : Container();
       },
     );
   }

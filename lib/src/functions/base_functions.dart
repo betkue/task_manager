@@ -63,6 +63,9 @@ showToast(String message,
   // if(textColor == null){
   //   textColor = Colors.white;
   // }
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //   SnackBar(content: Text('${widget.task['title']} supprimé')),
+  // );
   return Fluttertoast.showToast(
     msg: message,
     toastLength: Toast.LENGTH_LONG,

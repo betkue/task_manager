@@ -18,10 +18,19 @@ class MenuItem extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? blackColor
-              : Colors.white,
-          borderRadius: BorderRadius.circular(10)),
+        color: Theme.of(context).brightness == Brightness.dark
+            ? blackColor
+            : Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(
+            color: redColor, // Couleur de l'ombre avec transparence
+            spreadRadius: 0, // Propagation de l'ombre
+            blurRadius: 0, // Flou de l'ombre
+            offset: Offset.zero, // Décalage de l'ombre (x, y)
+          ),
+        ],
+      ),
       child: ListTile(
         leading: icon,
         title: Text(text,
