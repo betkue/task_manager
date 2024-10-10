@@ -36,10 +36,8 @@ class _CreateTaskState extends State<CreateTask> {
       title = widget.task!['title'];
       description = widget.task!['description'];
       priority = widget.task!['priority']; // Par défaut à 'l' pour faible
-      expectedBegin =
-          DateTime.parse(widget.task!['expectedBegin']); // date pour commencer
-      expectedEnd =
-          DateTime.parse(widget.task!['expectedEnd']); // date pour finir
+      expectedBegin = widget.task!['expectedBegin']; // date pour commencer
+      expectedEnd = widget.task!['expectedEnd']; // date pour finir
       state = widget.task![
           'state']; // 0 pour non commencée, 1 pour en cours, 2 pour terminée
     }
@@ -79,7 +77,7 @@ class _CreateTaskState extends State<CreateTask> {
               TextInput(
                   onsave: (value) {
                     setState(() {
-                      title =value ?? '';
+                      title = value ?? '';
                     });
                   },
                   text: title,
