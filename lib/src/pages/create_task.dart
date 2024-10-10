@@ -1,11 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:task_manager/src/blocs/online_mode.dart';
 import 'package:task_manager/src/blocs/text-input.dart';
+import 'package:task_manager/src/functions/base_functions.dart';
 import 'package:task_manager/src/styles/styles.dart';
+import 'package:task_manager/src/utils/sercive_provider.dart';
 
 class CreateTask extends StatefulWidget {
   final Map<String, dynamic>? task;
-  const CreateTask({super.key, this.task});
+  final int? index;
+  const CreateTask({super.key, this.task, this.index});
 
   @override
   State<CreateTask> createState() => _CreateTaskState();
@@ -14,14 +20,33 @@ class CreateTask extends StatefulWidget {
 class _CreateTaskState extends State<CreateTask> {
   final _formKey = GlobalKey<FormState>();
   String title = '';
+  bool load = false;
   String description = '';
   String priority = 'l'; // Par défaut à 'l' pour faible
   DateTime? expectedBegin; // date pour commencer
   DateTime? expectedEnd; // date pour finir
   int state = 0; // 0 pour non commencée, 1 pour en cours, 2 pour terminée
   double margin = 16;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.index != null && widget.task != null) {
+      title = widget.task!['title'];
+      description = widget.task!['description'];
+      priority = widget.task!['priority']; // Par défaut à 'l' pour faible
+      expectedBegin = widget.task!['expectedBegin']; // date pour commencer
+      expectedEnd = widget.task!['expectedEnd']; // date pour finir
+      state = widget.task![
+          'state']; // 0 pour non commencée, 1 pour en cours, 2 pour terminée
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final serviceProvider = Provider.of<ServiceProvider>(context); // provider
+
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
@@ -33,7 +58,9 @@ class _CreateTaskState extends State<CreateTask> {
             color: gray2Color,
           ),
         ),
-        title: const Text("Create Tasks"),
+        title: Text((widget.index != null && widget.task != null)
+            ? title
+            : "Create Tasks"),
         actions: const [OnlineMode()],
       ),
       body: Padding(
@@ -51,6 +78,7 @@ class _CreateTaskState extends State<CreateTask> {
                   onsave: (value) {
                     title = value ?? '';
                   },
+                  text: widget.task != null ? title : null,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter a title.';
@@ -180,6 +208,7 @@ class _CreateTaskState extends State<CreateTask> {
                   onsave: (value) {
                     description = value ?? '';
                   },
+                  text: widget.task != null ? description : null,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter a description.';
@@ -192,17 +221,40 @@ class _CreateTaskState extends State<CreateTask> {
                   ? Container()
                   : InkWell(
                       onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          // creation
-                          // Navigator.pop(context, {
-                          //   'title': title,
-                          //   'description': description,
-                          //   'priority': priority,
-                          //   'expectedBegin': expectedBegin,
-                          //   'expectedEnd': expectedEnd,
-                          //   'state': state,
-                          // });
+                        try {
+                          if (_formKey.currentState!.validate() && !load) {
+                            _formKey.currentState!.save();
+                            setState(() {
+                              load = true;
+                            });
+                            var task = {
+                              'title': title,
+                              'description': description,
+                              'priority': priority,
+                              'expectedBegin':
+                                  expectedBegin, // Heure supposée de début
+                              'expectedEnd':
+                                  expectedEnd, // Heure supposée de fin
+                              'actualBegin': null, // Heure réelle de début
+                              'actualEnd': null, // Heure réelle de fin
+                              'state': state, // État de la tâche
+                            };
+
+                            if (widget.index != null && widget.task != null) {
+                              serviceProvider.toggleUpdateTasks(
+                                  task, widget.index!);
+                            } else {
+                              serviceProvider.toggleAddTasks(task);
+                            }
+
+                            setState(() {
+                              load = false;
+                            });
+
+                            Navigator.pop(context);
+                          }
+                        } catch (e) {
+                          showToast("error", bgColor: redColor);
                         }
                       },
                       child: Center(
@@ -221,7 +273,12 @@ class _CreateTaskState extends State<CreateTask> {
                               borderRadius: BorderRadius.circular(20)),
                           child: Center(
                             child: Text(
-                              'Create Task',
+                              load
+                                  ? "Load ..."
+                                  : (widget.index != null &&
+                                          widget.task != null)
+                                      ? "Update task"
+                                      : 'Create Task',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,

@@ -6,11 +6,13 @@ class TextInput extends StatefulWidget {
   final Function(String?) validator;
   final String label;
   final int maxLines;
+  final String? text;
   const TextInput(
       {super.key,
       required this.onsave,
       required this.validator,
       required this.label,
+      this.text,
       this.maxLines = 1});
 
   @override
@@ -27,6 +29,7 @@ class _TextInputState extends State<TextInput> {
         cursorColor: blackColor,
         maxLines: widget.maxLines,
         keyboardType: TextInputType.text,
+        controller: TextEditingController(text: widget.text),
         style: TextStyle(
           color: blackColor,
           fontSize: height / 55,

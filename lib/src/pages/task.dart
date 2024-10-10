@@ -14,7 +14,7 @@ class Task extends StatefulWidget {
 }
 
 class _TaskState extends State<Task> {
-  int? stateTask = 0; //etat d'avensement des taches
+  int? stateTask; //etat d'avensement des taches
   String? selectedPriority; // priorite
   void change(int? a) {
     setState(() {
