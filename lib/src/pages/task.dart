@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/src/blocs/online_mode.dart';
 import 'package:task_manager/src/blocs/task_lister.dart';
+import 'package:task_manager/src/pages/create_task.dart';
 import 'package:task_manager/src/styles/styles.dart';
 import 'package:task_manager/src/utils/sercive_provider.dart';
 
@@ -28,7 +29,10 @@ class _TaskState extends State<Task> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const CreateTask()));
+        },
         elevation: 4,
         backgroundColor: orangeColor,
         child: Icon(
@@ -68,6 +72,10 @@ class _TaskState extends State<Task> {
                     itemBuilder: (BuildContext context) =>
                         <PopupMenuEntry<String>>[
                       const PopupMenuItem<String>(
+                        value: null,
+                        child: Text('All'),
+                      ),
+                      const PopupMenuItem<String>(
                         value: 'l',
                         child: Text('Low'),
                       ),
@@ -92,35 +100,39 @@ class _TaskState extends State<Task> {
                     onTap: () {
                       change(null);
                     },
-                    child: title("All", width, height,
-                        stateTask == null,context),
+                    child:
+                        title("All", width, height, stateTask == null, context),
                   ),
                   GestureDetector(
                     onTap: () {
                       change(0);
                     },
                     child: title(
-                        "In pending", width, height, stateTask == 0, context),
+                        "Not Started", width, height, stateTask == 0, context),
                   ),
                   GestureDetector(
                     onTap: () {
                       change(1);
                     },
                     child: title(
-                        "In Process", width, height, stateTask == 1, context),
+                        "In Progress", width, height, stateTask == 1, context),
                   ),
                   GestureDetector(
                     onTap: () {
                       change(2);
                     },
-                    child: title("End", width, height, stateTask == 2, context),
+                    child: title(
+                        "Completed", width, height, stateTask == 2, context),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 5,),
+            SizedBox(
+              height: 5,
+            ),
             Expanded(
-                child: TaskLister(priority: selectedPriority, state: stateTask))
+                child: TaskLister(
+                    priority: selectedPriority, state: stateTask)) //content
           ],
         ),
       ),
@@ -132,7 +144,7 @@ class _TaskState extends State<Task> {
 Widget title(
     String title, double width, double height, bool isActive, context) {
   return Container(
-    margin: EdgeInsets.only(right: 10),
+    margin: EdgeInsets.only(right: 4),
     child: Material(
       borderRadius: BorderRadius.circular(5),
       clipBehavior: Clip.hardEdge,
@@ -147,7 +159,7 @@ Widget title(
             textAlign: TextAlign.left,
             style: TextStyle(
               color: !isActive ? gray2Color : orangeColor,
-              fontSize: 18,
+              fontSize: 15,
               fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
             ),
           ),

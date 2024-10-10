@@ -90,12 +90,12 @@ getColorState(state) {
 getTextState(state) {
   switch (state) {
     case 0:
-      return "Pending ...";
+      return "Not Started";
 
     case 1:
-      return "Processing ...";
+      return "In Progress";
     case 2:
-      return "End ...";
+      return "Completed";
     default:
       return backgroundPage;
   }
