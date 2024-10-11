@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:task_manager/firebase_options.dart';
 import 'package:task_manager/src/pages/home.dart';
 import 'package:task_manager/src/pages/loadingpage.dart';
 import 'package:task_manager/src/utils/sercive_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 void main() async {
   //fixer l'orientation de l'app
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-
+ await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
  runApp(
     ChangeNotifierProvider(
       create: (context) => ServiceProvider(),
       child: MyApp(),
     ),
-  );;
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -41,7 +45,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData.light(), // Thème clair
           darkTheme: ThemeData.dark(), // Thème sombre
           themeMode: serviceProvider.themeMode, // Mode de thème
-          home: Home(),
+          home: const LoadingPage(),
         );
       },
     ));

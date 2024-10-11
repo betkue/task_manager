@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "898505909032",
+    "project_id": "tuto-next-js-7ade7",
+    "storage_bucket": "tuto-next-js-7ade7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898505909032:android:08163fbdead7efc656261d",
+        "android_client_info": {
+          "package_name": "com.example.task_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898505909032-1f6au5ahrrlje2e0iu7v3v74mevqlcsb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.task_manager",
+            "certificate_hash": "2d90df8c4e15ccedbca2d5a51eb4a1085de1abf8"
+          }
+        },
+        {
+          "client_id": "898505909032-8fh5ms5oapfkr211ehq6146pggie46c8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.task_manager",
+            "certificate_hash": "f2c1e3adfb2548dd1c4cb37a8761b230190c03f2"
+          }
+        },
+        {
+          "client_id": "898505909032-1dj2dehusm6h05t7ijq0s2k40khvt24c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgXXAPZdkNRyrRTPbSqaY-4AsREbSA1NQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898505909032-1dj2dehusm6h05t7ijq0s2k40khvt24c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "898505909032-3ptemb76pg8eiie7p4vkv1gs6k6gvmp1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.taskManager"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

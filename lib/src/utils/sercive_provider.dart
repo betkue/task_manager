@@ -1,15 +1,19 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:task_manager/models/user.dart';
 import 'package:task_manager/src/functions/base_functions.dart';
+import 'package:task_manager/src/utils/constant.dart';
 
 class ServiceProvider extends ChangeNotifier {
-  bool internet = false;
+  bool internet = true;
   SharedPreferences? _pref;
   String token = '';
-  Map<String, dynamic> userDetails = {"userName": ''};
+  Map<String, dynamic> userDetails = {};
   ThemeMode _themeMode = ThemeMode.light;
   List<dynamic> tasks = []; // Liste des tâches
   Map<String, dynamic> task = {};
@@ -29,6 +33,11 @@ class ServiceProvider extends ChangeNotifier {
   void toggleTheme(bool isDark) {
     _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
     _saveThemeToPrefs(isDark);
+    notifyListeners();
+  }
+
+  void logout() {
+    _pref!.clear();
     notifyListeners();
   }
 
@@ -109,6 +118,19 @@ class ServiceProvider extends ChangeNotifier {
 
     userDetails = Map<String, dynamic>.from(jsonDecode(value));
 
+    try {
+      //on charge l'utilisateur du serveur
+      var user = await usersCollections
+          .withConverter(
+              fromFirestore: Profile.fromFirestore,
+              toFirestore: (Profile p, options) => p.toFirestore())
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .get();
+
+      if (user.exists) {}
+    } catch (e) {
+      internet = false;
+    }
     notifyListeners();
   }
 
@@ -119,6 +141,14 @@ class ServiceProvider extends ChangeNotifier {
 
   // Sauvegarder le thème dans SharedPreferences
   void _saveTaskToPrefs(List<dynamic> tasks) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userDetails['id'])
+          .update({'task': tasks});
+    } catch (e) {
+      internet = false;
+    }
     await _pref!.setString('tasks', jsonEncode(tasks));
     _loadTaskFromPrefs();
   }

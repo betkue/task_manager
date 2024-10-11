@@ -67,7 +67,9 @@ class _SettingState extends State<Setting> {
                 ),
                 text: 'Logout',
                 subtitle: '',
-                ontab: () {},
+                ontab: () {
+                  logout(context,serviceProvider);
+                },
               ),
             ],
           ),

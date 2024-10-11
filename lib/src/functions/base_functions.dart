@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:task_manager/src/pages/singnup.dart';
 import 'package:task_manager/src/styles/styles.dart';
 import 'package:task_manager/src/utils/constant.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -11,48 +14,22 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:task_manager/src/utils/sercive_provider.dart';
 
 //test de connectivite
-getDetailsOfDevice(context) async {
+getDetailsOfDevice(context, serviceProvider) async {
   var connectivityResult = await (Connectivity().checkConnectivity());
-  final serviceProvider = Provider.of<ServiceProvider>(context); // provider
-  if (connectivityResult == ConnectivityResult.none) {
-    serviceProvider.toggleInternet(false);
-  } else {
-    serviceProvider.toggleInternet(true);
-  }
-}
-
-getLocalData(context) async {
-  //si l'application contient un token on recherche le user
-  final serviceProvider = Provider.of<ServiceProvider>(context); // provider
-
-  // if (serviceProvider.pref.containsKey('token')) {
-  //   serviceProvider.toggleToken(serviceProvider.pref.getString('token') ?? "");
-  //   var response = await getUserDetails(context);
-  //   return response;
-  // } else {
-  //   return false;
-  // }
-}
-
-getUserDetails(context) async {
-  dynamic result;
-  final serviceProvider = Provider.of<ServiceProvider>(context); // provider
 
   try {
-    if (serviceProvider.internet) {
-      //recuperation du user depuis le serveur
+    if (connectivityResult == ConnectivityResult.none) {
+      serviceProvider.toggleInternet(false);
+      return true;
     } else {
-      //recuperation du user en local
-      serviceProvider.toggleUser({});
-      result = true;
+      serviceProvider.toggleInternet(true);
+      return false;
     }
   } catch (e) {
-    if (e is SocketException) {
-      serviceProvider.toggleInternet(false);
-      result = false;
-    }
+    serviceProvider.toggleInternet(true);
+    log(e.toString());
+    return false;
   }
-  return result;
 }
 
 showToast(String message,
@@ -75,4 +52,19 @@ showToast(String message,
     textColor: textColor,
     fontSize: 12.0,
   );
+}
+
+logout(context, serviceProvider) {
+  try {
+    if (serviceProvider.internet) {
+      FirebaseAuth.instance.signOut();
+      serviceProvider.logout();
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const SignUp()));
+      });
+    }
+  } catch (e) {
+    log(e.toString());
+  }
 }
