@@ -13,7 +13,7 @@ class ServiceProvider extends ChangeNotifier {
   bool internet = true;
   SharedPreferences? _pref;
   String token = '';
-  Map<String, dynamic> userDetails = {};
+  Map<String, dynamic> userDetails = {"userName": "BTJH"};
   ThemeMode _themeMode = ThemeMode.light;
   List<dynamic> tasks = []; // Liste des tâches
   Map<String, dynamic> task = {};
@@ -114,23 +114,32 @@ class ServiceProvider extends ChangeNotifier {
     var value = '{}';
     if (_pref!.containsKey('user')) {
       value = _pref!.getString('user')!;
+    } else {
+      // value = jsonEncode(userDetails);
+      _saveUsersToPrefs(userDetails);
     }
 
     userDetails = Map<String, dynamic>.from(jsonDecode(value));
 
-    try {
-      //on charge l'utilisateur du serveur
-      var user = await usersCollections
-          .withConverter(
-              fromFirestore: Profile.fromFirestore,
-              toFirestore: (Profile p, options) => p.toFirestore())
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .get();
+    // try {
+    //   //on charge l'utilisateur du serveur
+    //   var user = await usersCollections
+    //       .withConverter(
+    //           fromFirestore: Profile.fromFirestore,
+    //           toFirestore: (Profile p, options) => p.toFirestore())
+    //       .doc(FirebaseAuth.instance.currentUser?.uid)
+    //       .get();
 
-      if (user.exists) {}
-    } catch (e) {
-      internet = false;
-    }
+    //   if (user.exists) {
+    //     if (DateTime.parse(user.data()!.updateAt!)
+    //             .compareTo(DateTime.parse(userDetails['updateAt'])) <
+    //         0) {
+    //       //derniere modification est locale
+    //     } else {}
+    //   }
+    // } catch (e) {
+    //   internet = false;
+    // }
     notifyListeners();
   }
 
@@ -141,14 +150,14 @@ class ServiceProvider extends ChangeNotifier {
 
   // Sauvegarder le thème dans SharedPreferences
   void _saveTaskToPrefs(List<dynamic> tasks) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userDetails['id'])
-          .update({'task': tasks});
-    } catch (e) {
-      internet = false;
-    }
+    // try {
+    //   await FirebaseFirestore.instance
+    //       .collection("users")
+    //       .doc(userDetails['id'])
+    //       .update({'task': tasks});
+    // } catch (e) {
+    //   internet = false;
+    // }
     await _pref!.setString('tasks', jsonEncode(tasks));
     _loadTaskFromPrefs();
   }

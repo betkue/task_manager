@@ -62,6 +62,7 @@ signInWithGoogle() async {
                 'userName': userCredential.user!.displayName,
                 'email': userCredential.user!.email,
                 'token': token,
+                'updateAt':DateTime.now().toString(),
                 'tasks': [],
               });
             });

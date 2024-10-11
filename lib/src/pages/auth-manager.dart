@@ -23,8 +23,8 @@ class _AuthManagerState extends State<AuthManager> {
 
   initialisation() async {
     //on verifi si l'appareil est connecte a internet
-    var internet = await getDetailsOfDevice(context, widget.serv);
-    widget.serv.toggleInternet(internet);
+    // var internet = await getDetailsOfDevice(context, widget.serv);
+    // widget.serv.toggleInternet(internet);
     //on charge les data
 
     //si l'utilisateur est connecte on ouvre la page d'acceuil
