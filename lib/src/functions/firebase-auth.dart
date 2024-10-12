@@ -2,10 +2,13 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:task_manager/main.dart';
 import 'package:task_manager/src/functions/firebase-messagering.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:task_manager/src/utils/constant.dart';
+import 'package:task_manager/src/utils/sercive_provider.dart';
 // Future<User?> signInWithGoogle() async {
 //   try {
 //     // Trigger the authentication flow
@@ -34,7 +37,7 @@ import 'package:task_manager/src/utils/constant.dart';
 //   }
 // }
 
-signInWithGoogle() async {
+signInWithGoogle(context,ServiceProvider serv) async {
   try {
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
@@ -54,6 +57,10 @@ signInWithGoogle() async {
                   .collection("users")
                   .doc(userCredential.user!.uid)
                   .update({'tokens': token});
+              Future.delayed(const Duration(seconds: 2), () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const MyApp()));
+              });
             });
           } else {
             FirebaseMessaging.instance.getToken().then((token) async {
@@ -62,8 +69,13 @@ signInWithGoogle() async {
                 'userName': userCredential.user!.displayName,
                 'email': userCredential.user!.email,
                 'token': token,
-                'updateAt':DateTime.now().toString(),
+                'updateAt': DateTime.now().toString(),
                 'tasks': [],
+              }).then((onValue) {
+                Future.delayed(const Duration(seconds: 2), () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => const MyApp()));
+                });
               });
             });
           }
@@ -71,6 +83,7 @@ signInWithGoogle() async {
       }
     });
   } catch (e) {
+    
     log(e.toString());
   }
 }

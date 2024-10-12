@@ -109,6 +109,21 @@ class ServiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<dynamic> SaveUser() async {
+    try {
+      var userFire = await usersCollections
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .get();
+      toggleUser(userFire.data());
+      Map<String, dynamic> user = userFire.data() as Map<String, dynamic>;
+      toggleUser(user);
+    } catch (e) {
+      internet = false;
+    }
+    notifyListeners();
+   
+  }
+
   // Charger les info du user depuis SharedPreferences
   void _loadUserFromPrefs() async {
     var value = '{}';
@@ -121,25 +136,25 @@ class ServiceProvider extends ChangeNotifier {
 
     userDetails = Map<String, dynamic>.from(jsonDecode(value));
 
-    // try {
-    //   //on charge l'utilisateur du serveur
-    //   var user = await usersCollections
-    //       .withConverter(
-    //           fromFirestore: Profile.fromFirestore,
-    //           toFirestore: (Profile p, options) => p.toFirestore())
-    //       .doc(FirebaseAuth.instance.currentUser?.uid)
-    //       .get();
+    try {
+      // //on charge l'utilisateur du serveur
+      // var user = await usersCollections
+      //     .withConverter(
+      //         fromFirestore: Profile.fromFirestore,
+      //         toFirestore: (Profile p, options) => p.toFirestore())
+      //     .doc(FirebaseAuth.instance.currentUser?.uid)
+      //     .get();
 
-    //   if (user.exists) {
-    //     if (DateTime.parse(user.data()!.updateAt!)
-    //             .compareTo(DateTime.parse(userDetails['updateAt'])) <
-    //         0) {
-    //       //derniere modification est locale
-    //     } else {}
-    //   }
-    // } catch (e) {
-    //   internet = false;
-    // }
+      // if (user.exists) {
+      //   if (DateTime.parse(user.data()!.updateAt!)
+      //           .compareTo(DateTime.parse(userDetails['updateAt'])) <
+      //       0) {
+      //     //derniere modification est locale
+      //   } else {}
+      // }
+    } catch (e) {
+      internet = false;
+    }
     notifyListeners();
   }
 
@@ -164,6 +179,7 @@ class ServiceProvider extends ChangeNotifier {
 
   // Sauvegarder le thème dans SharedPreferences
   void _saveUsersToPrefs(Map<String, dynamic> user) async {
+    // user = await loadUser(user);
     await _pref!.setString('user', jsonEncode(user));
   }
 }

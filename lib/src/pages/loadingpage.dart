@@ -9,6 +9,7 @@ import 'package:task_manager/src/pages/home.dart';
 import 'package:task_manager/src/pages/singnup.dart';
 import 'package:task_manager/src/styles/styles.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:task_manager/src/utils/constant.dart';
 import 'package:task_manager/src/utils/sercive_provider.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -28,6 +29,7 @@ class _LoadingPageState extends State<LoadingPage> {
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     final serviceProvider = Provider.of<ServiceProvider>(context);
+    var user;
     return Material(
       child: Scaffold(
         body: Stack(
@@ -61,8 +63,11 @@ class _LoadingPageState extends State<LoadingPage> {
                     nextScreen: StreamBuilder<User?>(
                         stream: FirebaseAuth.instance.authStateChanges(),
                         builder: (context, snapshot) {
+                       
                           return snapshot.hasData
-                              ? Home()
+                              ? Home(
+                                serv: serviceProvider,
+                              )
                               : AuthManager(
                                   serv: serviceProvider,
                                 );

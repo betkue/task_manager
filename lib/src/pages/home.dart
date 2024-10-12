@@ -4,8 +4,11 @@ import 'package:task_manager/src/functions/base_functions.dart';
 import 'package:task_manager/src/pages/settings.dart';
 import 'package:task_manager/src/pages/task.dart';
 import 'package:task_manager/src/styles/styles.dart';
+import 'package:task_manager/src/utils/sercive_provider.dart';
 
 class Home extends StatefulWidget {
+  final ServiceProvider serv;
+  const Home({super.key, required this.serv});
   @override
   _HomeState createState() => _HomeState();
 }
@@ -48,6 +51,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    widget.serv.SaveUser();
     super.initState();
   }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:task_manager/src/functions/firebase-auth.dart';
 import 'package:task_manager/src/styles/styles.dart';
+import 'package:task_manager/src/utils/sercive_provider.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -14,6 +16,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
+    final serviceProvider = Provider.of<ServiceProvider>(context); // provider
 
     return Material(
       child: Scaffold(
@@ -66,7 +69,7 @@ class _SignUpState extends State<SignUp> {
                           setState(() {
                             load = true;
                           });
-                          signInWithGoogle();
+                          signInWithGoogle(context,serviceProvider);
                           setState(() {
                             load = false;
                           });

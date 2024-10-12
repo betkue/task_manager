@@ -41,7 +41,7 @@ class _SettingState extends State<Setting> {
             children: [
               MenuItem(
                 icon: Icon(Icons.person),
-                text: serviceProvider.userDetails['userName'],
+                text: serviceProvider.userDetails['userName'] ?? "",
                 subtitle: 'Profile and preferences',
                 ontab: () {},
               ),
@@ -68,7 +68,7 @@ class _SettingState extends State<Setting> {
                 text: 'Logout',
                 subtitle: '',
                 ontab: () {
-                  logout(context,serviceProvider);
+                  logout(context, serviceProvider);
                 },
               ),
             ],

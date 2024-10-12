@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_manager/src/pages/singnup.dart';
 import 'package:task_manager/src/styles/styles.dart';
 import 'package:task_manager/src/utils/constant.dart';
-// import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:io';
 
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,21 +15,21 @@ import 'package:task_manager/src/utils/sercive_provider.dart';
 
 //test de connectivite
 getDetailsOfDevice(context, serviceProvider) async {
-  // var connectivityResult = await (Connectivity().checkConnectivity());
+  var connectivityResult = await (Connectivity().checkConnectivity());
 
-  // try {
-  //   if (connectivityResult == ConnectivityResult.none) {
-  //     serviceProvider.toggleInternet(false);
-  //     return true;
-  //   } else {
-  //     serviceProvider.toggleInternet(true);
-  //     return false;
-  //   }
-  // } catch (e) {
-  //   serviceProvider.toggleInternet(true);
-  //   log(e.toString());
-  //   return false;
-  // }
+  try {
+    if (connectivityResult == ConnectivityResult.none) {
+      serviceProvider.toggleInternet(false);
+      return true;
+    } else {
+      serviceProvider.toggleInternet(true);
+      return false;
+    }
+  } catch (e) {
+    serviceProvider.toggleInternet(true);
+    log(e.toString());
+    return false;
+  }
 }
 
 showToast(String message,
