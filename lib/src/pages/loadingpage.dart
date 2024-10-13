@@ -63,7 +63,7 @@ class _LoadingPageState extends State<LoadingPage> {
                     nextScreen: StreamBuilder<User?>(
                         stream: FirebaseAuth.instance.authStateChanges(),
                         builder: (context, snapshot) {
-                       
+                      
                           return snapshot.hasData
                               ? Home(
                                 serv: serviceProvider,

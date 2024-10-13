@@ -37,7 +37,7 @@ import 'package:task_manager/src/utils/sercive_provider.dart';
 //   }
 // }
 
-signInWithGoogle(context,ServiceProvider serv) async {
+signInWithGoogle(context, ServiceProvider serv) async {
   try {
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
@@ -56,7 +56,7 @@ signInWithGoogle(context,ServiceProvider serv) async {
               await FirebaseFirestore.instance
                   .collection("users")
                   .doc(userCredential.user!.uid)
-                  .update({'tokens': token});
+                  .update({'token': token});
               Future.delayed(const Duration(seconds: 2), () {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const MyApp()));
@@ -64,9 +64,9 @@ signInWithGoogle(context,ServiceProvider serv) async {
             });
           } else {
             FirebaseMessaging.instance.getToken().then((token) async {
-              await usersCollections.doc(userCredential.user!.uid).update({
+              await usersCollections.doc(userCredential.user!.uid).set({
                 'id': userCredential.user!.uid,
-                'userName': userCredential.user!.displayName,
+                'userName': userCredential.user!.displayName!.split(' ')[0],
                 'email': userCredential.user!.email,
                 'token': token,
                 'updateAt': DateTime.now().toString(),
@@ -83,7 +83,6 @@ signInWithGoogle(context,ServiceProvider serv) async {
       }
     });
   } catch (e) {
-    
     log(e.toString());
   }
 }

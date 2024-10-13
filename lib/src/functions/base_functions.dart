@@ -7,30 +7,30 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_manager/src/pages/singnup.dart';
 import 'package:task_manager/src/styles/styles.dart';
 import 'package:task_manager/src/utils/constant.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+// import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:io';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:task_manager/src/utils/sercive_provider.dart';
 
 //test de connectivite
-getDetailsOfDevice(context, serviceProvider) async {
-  var connectivityResult = await (Connectivity().checkConnectivity());
+// getDetailsOfDevice(context, serviceProvider) async {
+//   var connectivityResult = await (Connectivity().checkConnectivity());
 
-  try {
-    if (connectivityResult == ConnectivityResult.none) {
-      serviceProvider.toggleInternet(false);
-      return true;
-    } else {
-      serviceProvider.toggleInternet(true);
-      return false;
-    }
-  } catch (e) {
-    serviceProvider.toggleInternet(true);
-    log(e.toString());
-    return false;
-  }
-}
+//   try {
+//     if (connectivityResult == ConnectivityResult.none) {
+//       serviceProvider.toggleInternet(false);
+//       return true;
+//     } else {
+//       serviceProvider.toggleInternet(true);
+//       return false;
+//     }
+//   } catch (e) {
+//     serviceProvider.toggleInternet(true);
+//     log(e.toString());
+//     return false;
+//   }
+// }
 
 showToast(String message,
     {Color bgColor = greenColor, textColor = Colors.white, duration = 5}) {
@@ -54,17 +54,18 @@ showToast(String message,
   );
 }
 
-logout(context, serviceProvider) {
+logout(context, serviceProvider) async {
   try {
     if (serviceProvider.internet) {
-      FirebaseAuth.instance.signOut();
-      serviceProvider.logout();
+      await FirebaseAuth.instance.signOut();
+      await serviceProvider.logout();
       Future.delayed(const Duration(seconds: 2), () {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const SignUp()));
       });
     }
   } catch (e) {
+    serviceProvider.
     log(e.toString());
   }
 }

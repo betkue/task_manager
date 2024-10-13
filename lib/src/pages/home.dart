@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    widget.serv.SaveUser();
+    widget.serv.saveUser();
     super.initState();
   }
 

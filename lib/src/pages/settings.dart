@@ -14,6 +14,7 @@ class Setting extends StatefulWidget {
 }
 
 class _SettingState extends State<Setting> {
+  bool load = false;
   @override
   void initState() {
     super.initState();
@@ -36,43 +37,58 @@ class _SettingState extends State<Setting> {
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 40),
         child: Center(
-          child: ListView(
-            padding: EdgeInsets.all(16),
-            children: [
-              MenuItem(
-                icon: Icon(Icons.person),
-                text: serviceProvider.userDetails['userName'] ?? "",
-                subtitle: 'Profile and preferences',
-                ontab: () {},
-              ),
-              MenuItem(
-                icon: Icon(serviceProvider.themeMode == ThemeMode.dark
-                    ? Icons.dark_mode
-                    : Icons.light_mode),
-                text: 'Mode',
-                ontab: () {
-                  setState(() {
-                    serviceProvider.toggleTheme(
-                        !(serviceProvider.themeMode == ThemeMode.dark));
-                  });
-                },
-                subtitle: serviceProvider.themeMode == ThemeMode.dark
-                    ? 'Dark Mode'
-                    : 'Light Mode',
-              ),
-              MenuItem(
-                icon: Icon(
-                  Icons.logout,
-                  color: redColor,
+          child: load
+              ? Text(
+                  "Load ...",
+                  style: TextStyle(
+                      color: !(Theme.of(context).brightness == Brightness.dark)
+                          ? DarkColors.background
+                          : LightColors.background),
+                )
+              : ListView(
+                  padding: EdgeInsets.all(16),
+                  children: [
+                    MenuItem(
+                      icon: const Icon(Icons.person),
+                      text: serviceProvider.userDetails['userName'] ?? "",
+                      subtitle: 'Profile and preferences',
+                      ontab: () {},
+                    ),
+                    MenuItem(
+                      icon: Icon(serviceProvider.themeMode == ThemeMode.dark
+                          ? Icons.dark_mode
+                          : Icons.light_mode),
+                      text: 'Mode',
+                      ontab: () {
+                        setState(() {
+                          serviceProvider.toggleTheme(
+                              !(serviceProvider.themeMode == ThemeMode.dark));
+                        });
+                      },
+                      subtitle: serviceProvider.themeMode == ThemeMode.dark
+                          ? 'Dark Mode'
+                          : 'Light Mode',
+                    ),
+                    MenuItem(
+                      icon: Icon(
+                        Icons.logout,
+                        color: redColor,
+                      ),
+                      text: 'Logout',
+                      subtitle: '',
+                      ontab: () async {
+                        setState(() {
+                          load = true;
+                        });
+                        await logout(context, serviceProvider);
+
+                        setState(() {
+                          load = false;
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                text: 'Logout',
-                subtitle: '',
-                ontab: () {
-                  logout(context, serviceProvider);
-                },
-              ),
-            ],
-          ),
         ),
       ),
     );

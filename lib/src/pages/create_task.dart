@@ -67,9 +67,7 @@ class _CreateTaskState extends State<CreateTask> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
             children: [
               SizedBox(
                 height: margin,
@@ -88,11 +86,9 @@ class _CreateTaskState extends State<CreateTask> {
                     return null;
                   },
                   label: 'Title'),
-
               SizedBox(
                 height: margin,
               ),
-
               DropdownButtonFormField<String>(
                 value: priority,
                 decoration: const InputDecoration(labelText: 'Priority'),
@@ -108,86 +104,92 @@ class _CreateTaskState extends State<CreateTask> {
                 },
               ),
               SizedBox(height: margin),
-              // Sélection de la date de début
-              TextButton(
-                onPressed: () async {
-                  DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime
-                        .now(), // Ne permet pas de choisir une date passée
-                    lastDate: DateTime(2101), // Date maximale
-                  );
-                  if (picked != null) {
-                    TimeOfDay? timePicked = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    );
-                    if (timePicked != null) {
-                      setState(() {
-                        expectedBegin = DateTime(
-                          picked.year,
-                          picked.month,
-                          picked.day,
-                          timePicked.hour,
-                          timePicked.minute,
-                        );
-                      });
-                    }
-                  }
-                },
-                child: Text(
-                  expectedBegin == null
-                      ? 'Select Start Date'
-                      : 'Start: ${expectedBegin!.day}-${expectedBegin!.month}-${expectedBegin!.year} ${expectedBegin!.hour}:${expectedBegin!.minute.toString().padLeft(2, '0')}',
-                  style: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? LightColors.background
-                          : DarkColors.background),
-                ),
-              ),
-              SizedBox(height: margin),
-              // Sélection de la date de fin
-              expectedBegin == null
-                  ? Container()
-                  : TextButton(
-                      onPressed: () async {
-                        DateTime? picked = await showDatePicker(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Sélection de la date de début
+                  TextButton(
+                    onPressed: () async {
+                      DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime
+                            .now(), // Ne permet pas de choisir une date passée
+                        lastDate: DateTime(2101), // Date maximale
+                      );
+                      if (picked != null) {
+                        TimeOfDay? timePicked = await showTimePicker(
                           context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime
-                              .now(), // Ne permet pas de choisir une date passée
-                          lastDate: DateTime(2101), // Date maximale
+                          initialTime: TimeOfDay.now(),
                         );
-                        if (picked != null) {
-                          TimeOfDay? timePicked = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.now(),
-                          );
-                          if (timePicked != null) {
-                            setState(() {
-                              expectedEnd = DateTime(
-                                picked.year,
-                                picked.month,
-                                picked.day,
-                                timePicked.hour,
-                                timePicked.minute,
-                              );
-                            });
-                          }
+                        if (timePicked != null) {
+                          setState(() {
+                            expectedBegin = DateTime(
+                              picked.year,
+                              picked.month,
+                              picked.day,
+                              timePicked.hour,
+                              timePicked.minute,
+                            );
+                          });
                         }
-                      },
-                      child: Text(
-                        expectedEnd == null
-                            ? 'Select End Date'
-                            : 'End: ${expectedEnd!.day}-${expectedEnd!.month}-${expectedEnd!.year} ${expectedEnd!.hour}:${expectedEnd!.minute.toString().padLeft(2, '0')}',
-                        style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
+                      }
+                    },
+                    child: Text(
+                      expectedBegin == null
+                          ? 'Select Start Date'
+                          : 'Start: ${expectedBegin!.day}-${expectedBegin!.month}-${expectedBegin!.year} ${expectedBegin!.hour}:${expectedBegin!.minute.toString().padLeft(2, '0')}',
+                      style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? LightColors.background
+                              : DarkColors.background),
+                    ),
+                  ),
+                  SizedBox(height: margin),
+                  // Sélection de la date de fin
+                  expectedBegin == null
+                      ? Container()
+                      : TextButton(
+                          onPressed: () async {
+                            DateTime? picked = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime
+                                  .now(), // Ne permet pas de choisir une date passée
+                              lastDate: DateTime(2101), // Date maximale
+                            );
+                            if (picked != null) {
+                              TimeOfDay? timePicked = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                              );
+                              if (timePicked != null) {
+                                setState(() {
+                                  expectedEnd = DateTime(
+                                    picked.year,
+                                    picked.month,
+                                    picked.day,
+                                    timePicked.hour,
+                                    timePicked.minute,
+                                  );
+                                });
+                              }
+                            }
+                          },
+                          child: Text(
+                            expectedEnd == null
+                                ? 'Select End Date'
+                                : 'End: ${expectedEnd!.day}-${expectedEnd!.month}-${expectedEnd!.year} ${expectedEnd!.hour}:${expectedEnd!.minute.toString().padLeft(2, '0')}',
+                            style: TextStyle(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
                                     ? LightColors.background
                                     : DarkColors.background),
-                      ),
-                    ),
+                          ),
+                        ),
+                ],
+              ),
               SizedBox(height: margin),
               DropdownButtonFormField<int>(
                 value: state,
@@ -204,7 +206,6 @@ class _CreateTaskState extends State<CreateTask> {
                 },
               ),
               SizedBox(height: 2 * margin),
-
               TextInput(
                   maxLines: 5,
                   onsave: (value) {
@@ -220,7 +221,6 @@ class _CreateTaskState extends State<CreateTask> {
                     return null;
                   },
                   label: 'Description'),
-
               (title.isEmpty || expectedBegin == null || expectedEnd == null)
                   ? Container()
                   : InkWell(

@@ -13,7 +13,7 @@ class ServiceProvider extends ChangeNotifier {
   bool internet = true;
   SharedPreferences? _pref;
   String token = '';
-  Map<String, dynamic> userDetails = {"userName": "BTJH"};
+  Map<String, dynamic> userDetails = {};
   ThemeMode _themeMode = ThemeMode.light;
   List<dynamic> tasks = []; // Liste des tâches
   Map<String, dynamic> task = {};
@@ -26,7 +26,7 @@ class ServiceProvider extends ChangeNotifier {
     _pref =
         await SharedPreferences.getInstance(); // Initialiser SharedPreferences
     _loadThemeFromPrefs();
-    _loadTaskFromPrefs();
+    // _loadTaskFromPrefs();
     _loadUserFromPrefs();
   }
 
@@ -36,8 +36,14 @@ class ServiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void logout() {
-    _pref!.clear();
+  Future<void> logout() async {
+    try {
+      tasks = [];
+      userDetails = {};
+      await _pref!.clear();
+    } catch (e) {
+      internet = false;
+    }
     notifyListeners();
   }
 
@@ -46,8 +52,13 @@ class ServiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleUser(value) {
+  Future<void> toggleUser(value) async {
     userDetails = value;
+    userDetails['updateAt'] = DateTime.now().toString();
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userDetails['id'])
+        .update(userDetails);
     _saveUsersToPrefs(userDetails);
     notifyListeners();
   }
@@ -99,29 +110,40 @@ class ServiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Charger les tasks depuis SharedPreferences
-  void _loadTaskFromPrefs() async {
-    var value = '[]';
-    if (_pref!.containsKey('tasks')) {
-      value = _pref!.getString('tasks')!;
-    }
-    tasks = List<dynamic>.from(jsonDecode(value));
-    notifyListeners();
-  }
+  // // Charger les tasks depuis SharedPreferences
+  // void _loadTaskFromPrefs() async {
+  //   var value = '[]';
+  //   if (_pref!.containsKey('tasks')) {
+  //     value = _pref!.getString('tasks')!;
+  //   }
+  //   tasks = List<dynamic>.from(jsonDecode(value));
+  //   notifyListeners();
+  // }
 
-  Future<dynamic> SaveUser() async {
+  Future<dynamic> saveUser() async {
     try {
       var userFire = await usersCollections
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .get();
-      toggleUser(userFire.data());
+      // toggleUser(userFire.data());
       Map<String, dynamic> user = userFire.data() as Map<String, dynamic>;
-      toggleUser(user);
+
+      if (userDetails.isEmpty) {
+        tasks = user['tasks'];
+        toggleUser(user);
+      } else if (DateTime.parse(userDetails['updateAt'])
+              .compareTo(DateTime.parse(user['updateAt'])) >
+          0) {
+        tasks = userDetails['tasks'];
+        toggleUser(userDetails);
+      } else {
+        tasks = user['tasks'];
+        toggleUser(user);
+      }
     } catch (e) {
       internet = false;
     }
     notifyListeners();
-   
   }
 
   // Charger les info du user depuis SharedPreferences
@@ -165,16 +187,21 @@ class ServiceProvider extends ChangeNotifier {
 
   // Sauvegarder le thème dans SharedPreferences
   void _saveTaskToPrefs(List<dynamic> tasks) async {
-    // try {
-    //   await FirebaseFirestore.instance
-    //       .collection("users")
-    //       .doc(userDetails['id'])
-    //       .update({'task': tasks});
-    // } catch (e) {
-    //   internet = false;
-    // }
-    await _pref!.setString('tasks', jsonEncode(tasks));
-    _loadTaskFromPrefs();
+    try {
+      userDetails['tasks'] = tasks;
+      userDetails['updateAt'] = DateTime.now().toString();
+      _saveUsersToPrefs(userDetails);
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userDetails['id'])
+          .update(
+              userDetails); //{'tasks': tasks, 'updateAt': DateTime.now().toString()}
+    } catch (e) {
+      internet = false;
+    }
+
+    // await _pref!.setString('tasks', jsonEncode(tasks));
+    // _loadTaskFromPrefs();
   }
 
   // Sauvegarder le thème dans SharedPreferences
