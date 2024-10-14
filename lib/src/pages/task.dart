@@ -131,7 +131,10 @@ class _TaskState extends State<Task> {
             ),
             Expanded(
                 child: TaskLister(
-                    priority: selectedPriority, state: stateTask)) //content
+                    priority: selectedPriority, state: stateTask)), //content
+            SizedBox(
+              height: 20,
+            )
           ],
         ),
       ),

@@ -16,21 +16,22 @@ class _OnlineModeState extends State<OnlineMode> {
   Widget build(BuildContext context) {
     final serviceProvider = Provider.of<ServiceProvider>(context); // provider
 
-    return Row(
-      children: [
-        Text(serviceProvider.internet ? "On line" : "Off line"),
-        Transform.scale(
-          scale: 0.7,
-          child: Switch(
-              activeColor: greenColor,
-              value: serviceProvider.internet,
-              onChanged: (e) {
-                setState(() {
-                  // mode = !mode;
-                });
-              }),
-        )
-      ],
-    );
+    return Container();
+    // Row(
+    //   children: [
+    //     Text(serviceProvider.internet ? "On line" : "Off line"),
+    //     Transform.scale(
+    //       scale: 0.7,
+    //       child: Switch(
+    //           activeColor: greenColor,
+    //           value: serviceProvider.internet,
+    //           onChanged: (e) {
+    //             setState(() {
+    //               // mode = !mode;
+    //             });
+    //           }),
+    //     )
+    //   ],
+    // );
   }
 }
